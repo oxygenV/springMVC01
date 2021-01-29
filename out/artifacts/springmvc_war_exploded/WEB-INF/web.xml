@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+    <!--    配置springmvc核心组件DispatcherServlet-->
+    <servlet>
+        <servlet-name>mvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--
+         初始化springmvc配置，指定路径
+         将xml文件放置于WEB-INF下，默认从此目录开始查找配置文件，
+         xml文件名必须是<servlet-name>mvc</servlet-name>属性的值+servlet.xml 例如mvc-servlet。xml
+         -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:mvc-servlet.xml</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>mvc</servlet-name>
+        <!--
+               映射所有请求，/ 不会拦截jsp页面
+               映射所有请求，/* 拦截jsp页面
+
+               找不到html页面？
+               每个项目的web.xml继承自tomcat的web.xml，tomcat.web.xml中defaultServlet负责处理静态资源，
+               项目的web.xml设置为 / 会对tomcat.web.xml进行覆盖，而且项目的静态资源由DispatcherServlet控制
+               为什么可以找到jsp页面？
+               tomcat.web.xml中有一个JSPServlet类，会对JSP静态资源进行处理
+           -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+<!--    放行html文件、2-->
+<!--    <servlet>-->
+<!--        <servlet-name>default</servlet-name>-->
+<!--        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>-->
+<!--    </servlet>-->
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>default</servlet-name>-->
+<!--        <url-pattern>*.html</url-pattern>-->
+<!--    </servlet-mapping>-->
+
+<!--    自定义编码过滤器-->
+<!--    <filter>-->
+<!--        <filter-name>mvcfilter</filter-name>-->
+<!--        <filter-class>com.example.filter.MVCFilter</filter-class>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>mvcfilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
+
+<!--    springMVC编码过滤器 该过滤器也应该置于多个过滤器顶层-->
+    <filter>
+        <filter-name>encoding</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+<!--        初始化编码格式-->
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+<!--        通过encoding设置编码格式-->
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>
